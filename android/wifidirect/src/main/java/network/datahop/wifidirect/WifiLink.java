@@ -34,7 +34,6 @@ import java.util.List;
 import datahop.Datahop;
 import datahop.WifiConnection;
 import datahop.WifiConnectionNotifier;
-import network.datahop.datahopdemo.net.Config;
 
 /**
  * Created by srenevic on 03/08/17.
