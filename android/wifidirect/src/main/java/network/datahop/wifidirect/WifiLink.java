@@ -31,13 +31,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import datahop.Datahop;
-import datahop.WifiConnection;
-import datahop.WifiConnectionNotifier;
+import wifidirect.WifiConnection;
+import wifidirect.WifiConnectionNotifier;
 
-/**
- * Created by srenevic on 03/08/17.
- */
 public class WifiLink  implements WifiConnection {
 
 
@@ -107,11 +103,16 @@ public class WifiLink  implements WifiConnection {
         return mWifiLink;
     }
 
+    public void setNotifier(WifiConnectionNotifier notifier){
+        Log.d(TAG,"Trying to start");
+        this.notifier = notifier;
+    }
+
 
     public void connect(String SSID, String password,String ip){
     //    public void connect(String SSID, String password,String ip,String userId){
         //
-        this.notifier = Datahop.getWifiConnectionNotifier();
+        //this.notifier = Datahop.getWifiConnectionNotifier();
 
         if (notifier == null) {
             Log.e(TAG, "notifier not found");

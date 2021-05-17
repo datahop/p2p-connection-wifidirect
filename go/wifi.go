@@ -57,6 +57,7 @@ type wifiConnectionNotifier struct{}
 type WifiConnectionNotifier interface {
 	OnSuccess()
 	OnFailure(code int)
+	OnDisconnect()
 }
 
 
@@ -66,4 +67,9 @@ func (hs *wifiConnectionNotifier) OnSuccess(){
 
 func (hs *wifiConnectionNotifier) OnFailure(code int){
 	log.Debug("Connection failure ",code)
+}
+
+func (hs *wifiConnectionNotifier) OnDisconnect(){
+	log.Debug("OnDisconnect")
+
 }

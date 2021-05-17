@@ -21,16 +21,13 @@ import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.GroupInfoListener;
 import android.util.Log;
 
-import datahop.Datahop;
-import datahop.WifiHotspot;
-import datahop.WifiHotspotNotifier;
+import wifidirect.WifiHotspot;
+import wifidirect.WifiHotspotNotifier;
 
 import static android.net.wifi.p2p.WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION;
 import static android.net.wifi.p2p.WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION;
 
-/**
- * Created by srenevic on 03/08/17.
- */
+
 public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener,GroupInfoListener, WifiHotspot{
 
     WifiDirectHotSpot that = this;
@@ -51,20 +48,10 @@ public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener
 
     boolean started;
 
-    //private boolean connected=false;
 
     private static volatile WifiDirectHotSpot mWifiHotspot;
 
     private static WifiHotspotNotifier notifier;
-
-    /** Interface for callback invocation on an application action */
-    public interface StartStopListener {
-
-        public void onSuccess();
-
-        public void onFailure(int reason);
-    }
-
 
 
     public WifiDirectHotSpot(Context Context)//, StatsHandler stats/*, SettingsPreferences timers, JobParameters params*/)
@@ -83,10 +70,14 @@ public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener
         return mWifiHotspot;
     }
 
-    public void start(){
-        Log.d(TAG,"Trying to start");
-        this.notifier = Datahop.getWifiHotspotNotifier();
 
+    public void setNotifier(WifiHotspotNotifier notifier){
+        Log.d(TAG,"Trying to start");
+        this.notifier = notifier;
+    }
+
+
+    public void start(){
 
         if (notifier == null) {
             Log.e(TAG, "notifier not found");
@@ -206,26 +197,9 @@ public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener
     public void onGroupInfoAvailable(WifiP2pGroup group) {
 
         try {
-            //Collection<WifiP2pDevice> devlist = group.getClientList();
-   //         stats.setHsSSID(group.getNetworkName());
+
             if(notifier!=null)notifier.clientsConnected(group.getClientList().size());
-            /*int numm = 0;
-            for (WifiP2pDevice peer : group.getClientList()) {
-                numm++;
-                Log.d(TAG,"Client " + numm + " : "  + peer.deviceName + " " + peer.deviceAddress);
-            }
 
-            if(numm>0&!connected){
-                Log.d(TAG,"Client " + numm +" connect");
-                connected=true;
-
-            }
-            else if(numm==0&connected){
-                Log.d(TAG,"Client " + numm +" disconnect");
-                connected=false;
-                //stop();
-
-            }*/
 
             if(mNetworkName.equals(group.getNetworkName()) && mPassphrase.equals(group.getPassphrase())){
                 Log.d(TAG,"Already have local service for " + mNetworkName + " ," + mPassphrase);

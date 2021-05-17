@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: ./wifidirect/libs/wifi.aar">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/f1d19c2aeda41c1fda1fe6e369efcaad/wifi/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b9d3d7e86460b1f09851a4121ff7d5b2/wifi/AndroidManifest.xml" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b9d3d7e86460b1f09851a4121ff7d5b2/wifi/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-2/files-2.1/b9d3d7e86460b1f09851a4121ff7d5b2/wifi/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

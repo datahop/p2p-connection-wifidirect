@@ -1,11 +1,11 @@
 SUPPORT := $(shell dirname $(abspath $(lastword $(MAKEFILE_LIST))))/.release
-VERSION_PACKAGE := github.com/datahop/p2p-connection-wifi/go
+VERSION_PACKAGE := github.com/datahop/p2p-connection-wifidirect/go/version
 
 build: VERSION := $(shell . $(SUPPORT); getVersion)
 build:
-	@gomobile bind -o ./mobile/datahop.aar -target=android -ldflags "\
+	@gomobile bind -o wifi.aar -target=android -ldflags "\
 	-X '$(VERSION_PACKAGE).Version=$(VERSION)'" \
-	github.com/srene/ipfs-lite/mobile
+	github.com/datahop/p2p-connection-wifidirect/go
 
 patch-release: VERSION := $(shell . $(SUPPORT); nextPatchVersion)
 patch-release:
