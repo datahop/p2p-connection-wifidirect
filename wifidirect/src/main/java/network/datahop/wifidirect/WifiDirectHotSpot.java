@@ -21,8 +21,8 @@ import android.net.wifi.p2p.WifiP2pManager.ConnectionInfoListener;
 import android.net.wifi.p2p.WifiP2pManager.GroupInfoListener;
 import android.util.Log;
 
-import wifidirect.WifiHotspot;
-import wifidirect.WifiHotspotNotifier;
+import datahop.WifiHotspot;
+import datahop.WifiHotspotNotifier;
 
 import static android.net.wifi.p2p.WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION;
 import static android.net.wifi.p2p.WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION;
@@ -84,7 +84,7 @@ public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener
             return ;
         }
         if(!started) {
-            Log.d(TAG,"Start");
+            Log.d(TAG,"Starting P2P group");
             started=true;
 
             p2p = (WifiP2pManager) context.getSystemService(Context.WIFI_P2P_SERVICE);
@@ -107,21 +107,21 @@ public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener
 
                 p2p.createGroup(channel, new WifiP2pManager.ActionListener() {
                     public void onSuccess() {
-                        Log.d(TAG, "Creating Local Group ");
+                        //Log.d(TAG, "Creating Local Group ");
                         //listener.onSuccess();
                         if(notifier!=null)notifier.onSuccess();
 
                     }
 
                     public void onFailure(int reason) {
-                        Log.d(TAG, "Local Group failed, error code " + reason);
+                       // Log.d(TAG, "Local Group failed, error code " + reason);
                         if(notifier!=null)notifier.onFailure(reason);
                     }
                 });
             }
 
         } else {
-            Log.d(TAG,"Trying to set network");
+            //Log.d(TAG,"Trying to set network");
 
             if(notifier!=null)notifier.networkInfo(mNetworkName,mPassphrase);
         }
@@ -130,13 +130,11 @@ public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener
     public void stop() {
         if(started)
         {
-            Log.d(TAG,"Stop");
+            //Log.d(TAG,"Stop");
             try {
                 removeGroup();
             }catch (Exception e){Log.d(TAG,"Remove group error "+e);}
             started=false;
-        } else {
-            //listener.onSuccess();
         }
 
     }
@@ -149,42 +147,20 @@ public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener
     public boolean isConnected() {return connected;}*/
 
     public void removeGroup() {
-        Log.d(TAG,"removegroup");
+        Log.d(TAG,"Removing P2P group");
         p2p.removeGroup(channel,new WifiP2pManager.ActionListener() {
             public void onSuccess() {
-                Log.d(TAG,"Cleared Local Group ");
+                //Log.d(TAG,"Cleared Local Group ");
                 if(notifier!=null)notifier.stopOnSuccess();
             }
 
             public void onFailure(int reason) {
-                Log.d(TAG,"Clearing Local Group failed, error code " + reason);
+                //Log.d(TAG,"Clearing Local Group failed, error code " + reason);
                 if(notifier!=null)notifier.stopOnFailure(reason);
             }
         });
     }
 
-    public String getNetworkName(){
-        return mNetworkName;
-    }
-
-    public String getPassphrase(){
-        return mPassphrase;
-    }
-
-    /*public void startConnection()
-    {
-        Intent broadcast = new Intent(Config.STOP_DIS_BLUETOOTH);
-        LocalBroadcastManager.getInstance(context).sendBroadcast(broadcast);
-        broadcastHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if(!isConnected()) {
-                    Intent broadcast = new Intent(Config.START_DIS_BLUETOOTH);
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(broadcast);
-                }
-            }
-        }, Config.wifiConnectionWaitingTime);
-    }*/
 
     @Override
     public void onChannelDisconnected() {

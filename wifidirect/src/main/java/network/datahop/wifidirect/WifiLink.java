@@ -31,8 +31,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import wifidirect.WifiConnection;
-import wifidirect.WifiConnectionNotifier;
+import datahop.WifiConnection;
+import datahop.WifiConnectionNotifier;
 
 public class WifiLink  implements WifiConnection {
 
