@@ -5,10 +5,8 @@
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" android:required="true" />
     <uses-permission android:name="android.permission.WAKE_LOCK" android:required="true"/>
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" android:required="true" />
-    <uses-permission android:name="android.permission.INTERNET" android:required="true" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" android:required="true" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" android:required="true" />
-    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" android:required="true" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" android:required="true"/>
     <uses-permission android:name="android.permission.WAKE_LOCK" android:required="true"/>
     <application

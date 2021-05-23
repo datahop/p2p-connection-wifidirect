@@ -91,9 +91,9 @@ public class MainActivity extends AppCompatActivity implements WifiHotspotNotifi
     }
 
     @Override
-    protected void onStop() {
+    protected void onDestroy() {
         hotspot.stop();
-        super.onStop();
+        super.onDestroy();
     }
 
     @Override
