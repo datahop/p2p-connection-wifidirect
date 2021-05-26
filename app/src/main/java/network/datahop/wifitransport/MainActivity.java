@@ -5,8 +5,6 @@ import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -29,7 +27,7 @@ import network.datahop.wifidirect.WifiDirectHotSpot;
 public class MainActivity extends AppCompatActivity implements WifiHotspotNotifier, WifiConnectionNotifier {
 
 
-    private Button hsButton,linkButton;
+    private Button startHSButton,stopHSButton,connectButton,disconnectButton;
 
     private EditText ssid, password;
     private TextView ssidView, passView;
@@ -49,8 +47,11 @@ public class MainActivity extends AppCompatActivity implements WifiHotspotNotifi
         connection = WifiLink.getInstance(getApplicationContext());
         hotspot.setNotifier(this);
         connection.setNotifier(this);
-        hsButton = (Button) findViewById(R.id.activatebutton);
-        linkButton = (Button) findViewById(R.id.connectbutton);
+        startHSButton = (Button) findViewById(R.id.activatebutton);
+        connectButton = (Button) findViewById(R.id.connectbutton);
+
+        stopHSButton = (Button) findViewById(R.id.stopbutton);
+        disconnectButton = (Button) findViewById(R.id.disconnectbutton);
 
         ssid = (EditText) findViewById(R.id.network);
         password = (EditText) findViewById(R.id.password);
@@ -59,17 +60,24 @@ public class MainActivity extends AppCompatActivity implements WifiHotspotNotifi
         passView = (TextView) findViewById(R.id.textview_pass);
 
         requestForPermissions();
-        hsButton.setOnClickListener(new View.OnClickListener() {
+        startHSButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 hotspot.start();
             }
         });
 
-        linkButton.setOnClickListener(new View.OnClickListener() {
+        stopHSButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                connection.connect(ssid.getText().toString().replaceAll("\\s+", ""),password.getText().toString().replaceAll("\\s+", ""),"");
+                hotspot.stop();
+            }
+        });
+
+        disconnectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                connection.disconnect();
             }
         });
 
