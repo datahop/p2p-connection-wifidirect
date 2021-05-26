@@ -1,4 +1,4 @@
-# DataHop Device-to-Device WifiDirect connectivity
+# DataHop Device-to-Device Wifi-Direct connectivity
 
 This library implements a Device-to-Device (D2D) connectivity solution for Android devices used by the DataHop Network platform.
 [DataHop](https://datahop.network) is a new platform aimed at exploring the potential of a user-operated, smartphone-centric content distribution model for user applications in contrast with the traditional client-server model, that is used by the majority of mobile data transfers today.
