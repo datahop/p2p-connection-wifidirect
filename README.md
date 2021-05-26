@@ -7,6 +7,7 @@ In particular, we propose that some nodes, either fetching the content via Inter
 ### Information-Centric and Application-Aware Connectivity
 
 This library implements the native library for Android of the WiFi Direct specification to exchange application content updates. 
+This library is compatible with Go and the IPFS-lite library created in [https://github.com/datahop/ipfs-lite](https://github.com/datahop/ipfs-lite)
 WiFi Direct provides all the features required to provide smart connectivity between users and transfer content without infrastructure participation. 
 However current Android WiFi Direct Android implementation still has one drawback: it requires user participation to accept every connection. 
 In order to require any user participation allowing DataHop to run in the background, seamlessly to users, this library uses a hybrid mode according to which source devices create a WiFi Direct network using the previously described WiFi
@@ -23,7 +24,7 @@ Direct Autonomous Mode and destination devices connect to it as a normal WiFi co
 
 The library can be built manually using the following command:
 
-```shell
+```
 $ ./gradlew assembleDebug
 ```
 
@@ -34,9 +35,26 @@ The library can be also automatically imported via gradle: TBC
 
 # Usage
 
+The library is basically implementing two functionalities, the `WifiDirectHotspot` that will create the Wifi-Direct group and will accept incoming connections from other users, and the `WifiLink`, that will connect to other users that previously created a Wifi-Direct group. The two can be created and used following the next instructions:
+
+* From Android:
+
+```
+  //Both instances must be created
+  WifiDirectHotSpot hotspot = WifiDirectHotSpot.getInstance(getApplicationContext());
+  WifiLink connection = WifiLink.getInstance(getApplicationContext());
+  
+  //A notifier should be passed into the instance
+  hotspot.setNotifier(hsnotifier);
+  connection.setNotifier(cnnotifier);
+```
+
+
+* From a Go Application:
+
 # Demo  application
 
-# Others
+
 
 # How to make contributions
 Please read and follow the steps in [CONTRIBUTING.md](/CONTRIBUTING.md)
