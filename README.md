@@ -21,6 +21,17 @@ Direct Autonomous Mode and destination devices connect to it as a normal WiFi co
 
 # Installation
 
+The library can be built manually using the following command:
+
+```shell
+$ ./gradlew assembleDebug
+```
+
+and copy the generated .aar library into the `app/libs` folder of your app.
+
+The library can be also automatically imported via gradle: TBC
+
+
 # Usage
 
 # Demo  application
