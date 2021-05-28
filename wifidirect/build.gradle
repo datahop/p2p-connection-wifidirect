@@ -36,7 +36,7 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
    // implementation fileTree(dir: "libs", include: ["*.aar"])
-    compileOnly files('libs/datahop.aar')
+    //compileOnly files('libs/datahop.aar')
     //implementation(name: 'datahop', ext: 'aar')
     //implementation fileTree(dir: "libs", include: ["*.aar"])
     //api(name: 'datahop', ext: 'aar')

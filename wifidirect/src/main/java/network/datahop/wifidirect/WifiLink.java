@@ -392,13 +392,13 @@ public class WifiLink  implements WifiConnection {
                             Log.d(TAG, "IP  " + ipAddress + " " + gwAddress);
                             //stats.setWStatus("Connected");
                             //listener.wifiLinkConnected(gwAddress);
-                            if(notifier!=null)notifier.onSuccess();
+                            if(notifier!=null)notifier.onConnectionSuccess();
                         }catch (UnknownHostException e){}
                        // backend.connectionCompleted(started,new Date(),wiffo.getRssi(),wiffo.getLinkSpeed(),wiffo.getFrequency());
                     } else if(!wiffo.getSSID().equals(wifiConfig.SSID)) {
                         Log.d(TAG, "Not connected");
                         //listener.wifiLinkDisconnected();
-                        if(notifier!=null)notifier.onFailure(0);
+                        if(notifier!=null)notifier.onConnectionFailure(0);
                     }
 
                 }
