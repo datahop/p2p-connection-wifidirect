@@ -19,12 +19,16 @@ import datahop.WifiHotspotNotifier;
 import static android.net.wifi.p2p.WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION;
 import static android.net.wifi.p2p.WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION;
 
-
+/**
+ * WifiDirectHotSpot class creates a Wifi-Direct group in autonomous mode; i.e. a Wifi-Direct
+ * group is generated without requiring any user connected to it, and can be discovered and joined in
+ * the same way a legacy WiFi hotspot. Implements WifiHotspot (link to go bindings)
+ */
 public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener,GroupInfoListener, WifiHotspot{
+
 
     WifiDirectHotSpot that = this;
     Context context;
-
 
     private WifiP2pManager p2p;
     private WifiP2pManager.Channel channel;
@@ -40,20 +44,24 @@ public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener
 
     boolean started;
 
-
     private static volatile WifiDirectHotSpot mWifiHotspot;
 
     private static WifiHotspotNotifier notifier;
 
 
-    public WifiDirectHotSpot(Context Context)//, StatsHandler stats/*, SettingsPreferences timers, JobParameters params*/)
+    /* WifiDirectHotSpot constructor
+     * @param Android context
+     */
+    private WifiDirectHotSpot(Context Context)
     {
         this.context = Context;
         started = false;
 
     }
 
-    // Singleton method
+    /* Singleton method that returns a WifiDirectHotSpot instance
+     * @return WifiDirectHotSpot instance
+     */
     public static synchronized WifiDirectHotSpot getInstance(Context appContext) {
         if (mWifiHotspot == null) {
             mWifiHotspot = new WifiDirectHotSpot(appContext);
@@ -63,12 +71,20 @@ public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener
     }
 
 
+    /**
+     * Set the notifier that receives the events advertised
+     * when creating or destroying the group or when receiving users connections
+     * @param notifier instance
+     */
     public void setNotifier(WifiHotspotNotifier notifier){
         Log.d(TAG,"Trying to start");
         this.notifier = notifier;
     }
 
 
+    /**
+     * Starts the service and creates the Wifi-Direct group
+     */
     public void start(){
 
         if (notifier == null) {
@@ -119,6 +135,9 @@ public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener
         }
     }
 
+    /**
+     * Stops the service and destroys the Wifi-Direct group
+     */
     public void stop() {
         if(started)
         {
@@ -131,14 +150,7 @@ public class WifiDirectHotSpot implements ConnectionInfoListener,ChannelListener
 
     }
 
-    /*public boolean isRunning()
-    {
-        return started;
-    }
-
-    public boolean isConnected() {return connected;}*/
-
-    public void removeGroup() {
+    private void removeGroup() {
         Log.d(TAG,"Removing P2P group");
         p2p.removeGroup(channel,new WifiP2pManager.ActionListener() {
             public void onSuccess() {

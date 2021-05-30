@@ -26,8 +26,16 @@ import java.util.List;
 import datahop.WifiConnection;
 import datahop.WifiConnectionNotifier;
 
+
+/**
+ * WifiLink can be used to automatically join a Wifi-Direct group in autonomous mode or a legacy
+ * WiFi connection (i.e., WiFi Hotspot). It disconnects from current WiFi connection, in case it
+ * is connected, when calling connect() method, and reconnects after calling disconnect() method.
+ */
 public class WifiLink  implements WifiConnection {
 
+
+    public static final long wifiConnectionWaitingTime = 60000;
 
     static final public int ConectionStateNONE = 0;
     static final public int ConectionStatePreConnecting = 1;
@@ -47,78 +55,85 @@ public class WifiLink  implements WifiConnection {
     int netId = 0;
     WiFiConnectionReceiver receiver;
     private IntentFilter filter;
-    String inetAddress = "";
     boolean connected=false;
     String ssid;
 
     Handler handler;
-    // create a class member variable.
+
     WifiManager.WifiLock mWifiLock = null;
-    //PowerManager.WakeLock wakeLock;
-    //SettingsPreferences timers;
 
     Date started;
-
-    //String userId;
-
-    //DataHopBackend backend;
-
-    long waitingTime;
 
     private static volatile WifiLink mWifiLink;
 
     private static WifiConnectionNotifier notifier;
 
+
+    /* WifiLink constructor
+     * @param Android context
+     */
     public WifiLink(Context context)
    {
-
         this.context = context;
-     //   this.listener = listener;
         filter = new IntentFilter();
         filter.addAction(WifiManager.NETWORK_STATE_CHANGED_ACTION);
         receiver = new WiFiConnectionReceiver();
-        //WIFI connection
         this.wifiManager = (WifiManager)this.context.getSystemService(Context.WIFI_SERVICE);
         handler = new Handler();
-    //    this.stats = stats;
-        //this.timers = timers;
-        //this.backend = backend;
-        this.waitingTime = Config.wifiConnectionWaitingTime;
+
     }
 
-    // Singleton method
+    /* Singleton method that returns a WifiLink instance
+     * @return WifiLink instance
+     */
     public static synchronized WifiLink getInstance(Context appContext) {
         if (mWifiLink == null) {
             mWifiLink = new WifiLink(appContext);
-            // initDriver();
         }
         return mWifiLink;
     }
 
+    /**
+     * Set the notifier that receives the events advertised
+     * when creating or destroying the group or when receiving users connections
+     * @param notifier instance
+     */
     public void setNotifier(WifiConnectionNotifier notifier){
         Log.d(TAG,"Trying to start");
         this.notifier = notifier;
     }
 
 
+    /**
+     * This method disconnects from any existing Wifi connection to join the SSID specified
+     * as an input parameter. DHCP is used for IP configuration.
+     * @param SSID of the WiFi network to join
+     * @param password of the WiFi network to join
+     */
+    public void connect(String SSID, String password){
+        connect(SSID,password);
+    }
+
+    /**
+     * This method disconnects from any existing Wifi connection to join the SSID specified
+     * as an input parameter. IP address is configure statically from the input parameter
+     * @param SSID of the WiFi network to join
+     * @param password of the WiFi network to join
+     * @param ip address to configure statically
+     */
     public void connect(String SSID, String password,String ip){
-    //    public void connect(String SSID, String password,String ip,String userId){
-        //
-        //this.notifier = Datahop.getWifiConnectionNotifier();
 
         if (notifier == null) {
             Log.e(TAG, "notifier not found");
             return ;
         }
-        //disconnect();
+
         Log.d(TAG,"Start connection to ssid "+SSID+" Pass:"+password);
         if(!connected&&(mConectionState==ConectionStateNONE||mConectionState==ConectionStateDisconnected)) {
             started = new Date();
-            //this.userId = userId;
             this.wifiConfig = new WifiConfiguration();
             this.wifiConfig.SSID = String.format("\"%s\"", SSID);
             this.wifiConfig.preSharedKey = String.format("\"%s\"", password);
-            //Log.d(TAG, "WE HAVE REACHED HERE");
             ssid = this.wifiManager.getConnectionInfo().getSSID();
             this.wifiConfig.priority = 10000;
             List<WifiConfiguration> wifis = this.wifiManager.getConfiguredNetworks();
@@ -139,42 +154,25 @@ public class WifiLink  implements WifiConnection {
 
                 }
             }
-            /*if (this.wifiConfig  != null)
-            {
-                try
-                {
-                    setStaticIpConfiguration(wifiManager, wifiConfig,
-                            InetAddress.getByName(ip), 24,
-                            InetAddress.getByName("192.168.49.1"),
-                            new InetAddress[] { InetAddress.getByName("192.168.49.1")});
-                }
-                catch (Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }*/
 
-
-            //this.wifiManager.startScan();
-            //this.wifiManager.disconnect();
             this.context.registerReceiver(receiver, filter);
             this.netId = this.wifiManager.addNetwork(this.wifiConfig);
             Log.d(TAG,"Wifimanager add network "+netId);
             this.wifiManager.disconnect();
             this.wifiManager.enableNetwork(this.netId, true);
             this.wifiManager.reconnect();
-//            stats.setWStatus("Connecting...");
-
 
             holdWifiLock();
             handler.removeCallbacksAndMessages(null);
-            //final String user = userId;
-            handler.postDelayed(timeout,waitingTime);
-            //backend.connectionStarted(started);
+            handler.postDelayed(timeout,wifiConnectionWaitingTime);
 
         }
     }
 
+    /**
+     * This method disconnects from the specified network in the connect() method and rejoins any
+     * prexisting Wifi connection.
+     */
     public void disconnect(){
         releaseWifiLock();
         handler.removeCallbacksAndMessages(null);
@@ -199,21 +197,11 @@ public class WifiLink  implements WifiConnection {
             mPreviousState=ConectionStateNONE;
             Log.d(TAG,"Report disconnection");
             if(notifier!=null)notifier.onDisconnect();
-            // listener.wifiLinkDisconnected();
 
         }
 
 
     }
-
-    public void SetInetAddress(String address){
-        this.inetAddress = address;
-    }
-
-    public String GetInetAddress(){
-        return this.inetAddress;
-    }
-
 
     /***
      * Calling this method will aquire the lock on wifi. This is avoid wifi
@@ -221,10 +209,7 @@ public class WifiLink  implements WifiConnection {
      **/
     private void holdWifiLock() {
         WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-        /*PowerManager powerManager = (PowerManager) context.getSystemService(POWER_SERVICE);
-        wakeLock = powerManager.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                "MyWakelockTag");
-        wakeLock.acquire();*/
+
         if( mWifiLock == null )
             mWifiLock = wifiManager.createWifiLock(WifiManager.WIFI_MODE_FULL, TAG);
 
@@ -246,8 +231,6 @@ public class WifiLink  implements WifiConnection {
         if( mWifiLock != null && mWifiLock.isHeld() ){
             mWifiLock.release();
         }
-        //wakeLock.release();
-
 
     }
 
@@ -322,7 +305,6 @@ public class WifiLink  implements WifiConnection {
             //Do something after 100ms
             if (!hadConnection) {
                 Log.d(TAG, "timeout");
-                //backend.connectionFailed(started, new Date());
                 disconnect();
 
             }
@@ -380,8 +362,7 @@ public class WifiLink  implements WifiConnection {
                 if(wiffo!=null&&mConectionState==ConectionStateConnected&&mPreviousState==ConectionStateConnecting){
                     handler.removeCallbacks(timeout);
                     if(wiffo.getSSID().equals(wifiConfig.SSID)&&!hadConnection) {
-                        //Log.d(TAG, "Ip address: " + wiffo.getIpAddress());
-                        //Log.d(TAG, "Create face to " + inetAddress);
+
                         hadConnection=true;
                         Log.d(TAG, "Connected to " + wiffo);
                         int ip = wiffo.getIpAddress();
@@ -390,14 +371,11 @@ public class WifiLink  implements WifiConnection {
                             String ipAddress = InetAddress.getByAddress(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(ip).array()).getHostAddress();
                             String gwAddress = InetAddress.getByAddress(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(gateway).array()).getHostAddress();
                             Log.d(TAG, "IP  " + ipAddress + " " + gwAddress);
-                            //stats.setWStatus("Connected");
-                            //listener.wifiLinkConnected(gwAddress);
+
                             if(notifier!=null)notifier.onConnectionSuccess();
                         }catch (UnknownHostException e){}
-                       // backend.connectionCompleted(started,new Date(),wiffo.getRssi(),wiffo.getLinkSpeed(),wiffo.getFrequency());
                     } else if(!wiffo.getSSID().equals(wifiConfig.SSID)) {
                         Log.d(TAG, "Not connected");
-                        //listener.wifiLinkDisconnected();
                         if(notifier!=null)notifier.onConnectionFailure(0);
                     }
 
