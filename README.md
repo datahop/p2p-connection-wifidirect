@@ -99,6 +99,11 @@ hop.wifiCon.Connect(network,pass,address)
 hop.wifiCon.Disconnect()
 ```
 
+# Docs
+
+[Code documentation](https://datahop.github.io/p2p-connection-wifidirect)
+
+
 # Demo  application
 
 [https://github.com/datahop/datahop-android-demo](https://github.com/datahop/datahop-android-demo)
