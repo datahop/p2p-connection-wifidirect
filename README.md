@@ -27,11 +27,33 @@ This library is compatible with Go and the IPFS-lite library created in [https:/
 The library can be built manually using the following command:
 
 ```
-$ ./gradlew assembleDebug
+$ ./gradlew wifidirect:assembleRelease
 ```
 
 and copy the generated .aar library into the `app/libs` folder of your app.
 
+To add the library in your Android project first add the libs folder in your repositories list of the project `build.gradle` file,
+
+```
+allprojects {
+    repositories {
+    ....
+      flatDir {
+          dirs 'libs'
+      }
+    }
+}
+```
+
+and then add the library as a depencency of your project in the app `build.gradle` file.
+
+```
+dependencies {
+    ....
+    implementation(name: 'wifidirect-release', ext: 'aar')
+
+}
+```
 The library can be also automatically imported via gradle: TBC
 
 
@@ -76,6 +98,11 @@ Wifi link connect and disconnect
 hop.wifiCon.Connect(network,pass,address)
 hop.wifiCon.Disconnect()
 ```
+
+# Docs
+
+[Code documentation](https://datahop.github.io/p2p-connection-wifidirect)
+
 
 # Demo  application
 
