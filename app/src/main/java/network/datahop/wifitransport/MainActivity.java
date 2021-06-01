@@ -116,6 +116,18 @@ public class MainActivity extends AppCompatActivity implements WifiHotspotNotifi
     }
 
     @Override
+    public void onFailure(long l) {
+        Log.d(TAG,"onFailure");
+
+    }
+
+    @Override
+    public void onSuccess() {
+        Log.d(TAG,"onSuccess");
+
+    }
+
+    @Override
     public void onDisconnect() {
         Log.d(TAG,"onDisconnect");
 
