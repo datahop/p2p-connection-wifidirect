@@ -145,13 +145,15 @@ public class WifiLink  implements WifiConnection {
 
             if(wifis!=null) {
                 for (WifiConfiguration wifi : wifis) {
-                    if(wifi.SSID.startsWith("DIRECT-"))
-                        result = this.wifiManager.removeNetwork(wifi.networkId);
-                    else
-                        result = this.wifiManager.disableNetwork(wifi.networkId);
-
-                    Log.d(TAG,"Disable "+wifi.SSID+" "+result);
-
+                    if (!wifi.SSID.equals(String.format("\"%s\"", SSID))) {
+                        if(wifi.SSID.startsWith("\"DIRECT")) {
+                            result = this.wifiManager.removeNetwork(wifi.networkId);
+                            Log.d(TAG,"Removed "+wifi.SSID+" "+result);
+                        } else {
+                            result = this.wifiManager.disableNetwork(wifi.networkId);
+                            Log.d(TAG,"Disable "+wifi.SSID+" "+result);
+                        }
+                    }
                 }
             }
 
