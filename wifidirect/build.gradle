@@ -7,7 +7,7 @@ android {
     buildToolsVersion "30.0.1"
 
     defaultConfig {
-        minSdkVersion 28
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
@@ -29,16 +29,10 @@ android {
 }
 
 dependencies {
-
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    //implementation fileTree(dir: "libs", include: ["*.aar"])
     compileOnly files('libs/datahop.aar')
-    //implementation(name: 'datahop', ext: 'aar')
-    //implementation fileTree(dir: "libs", include: ["*.aar"])
-    //api(name: 'datahop', ext: 'aar')
-
 }
