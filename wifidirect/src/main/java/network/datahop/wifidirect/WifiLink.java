@@ -111,7 +111,7 @@ public class WifiLink  implements WifiConnection {
      * @param password of the WiFi network to join
      */
     public void connect(String SSID, String password){
-        connect(SSID,password);
+        connect(SSID,password,"");
     }
 
     /**
@@ -154,6 +154,21 @@ public class WifiLink  implements WifiConnection {
                             Log.d(TAG,"Disable "+wifi.SSID+" "+result);
                         }
                     }
+                }
+            }
+
+            if (this.wifiConfig  != null && !ip.equals(""))
+            {
+                try
+                {
+                    setStaticIpConfiguration(wifiManager, wifiConfig,
+                            InetAddress.getByName(ip), 24,
+                            InetAddress.getByName("192.168.49.1"),
+                            new InetAddress[] { InetAddress.getByName("192.168.49.1")});
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
                 }
             }
 

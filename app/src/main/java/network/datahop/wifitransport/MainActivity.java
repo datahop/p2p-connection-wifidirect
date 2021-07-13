@@ -81,6 +81,14 @@ public class MainActivity extends AppCompatActivity implements WifiHotspotNotifi
             }
         });
 
+        connectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG,"Connecting "+ ssid.getText().toString()+" "+password.getText().toString());
+                connection.connect(ssid.getText().toString(),password.getText().toString());
+            }
+        });
+
     }
 
     @Override

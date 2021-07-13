@@ -1,5 +1,7 @@
 plugins {
     id 'com.android.library'
+    id 'maven-publish'
+
 }
 
 android {
@@ -7,10 +9,10 @@ android {
     buildToolsVersion "30.0.1"
 
     defaultConfig {
-        minSdkVersion 21
+        minSdkVersion 28
         targetSdkVersion 28
-        versionCode 1
-        versionName "1.0"
+        versionCode 0
+        versionName "alpha"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -35,4 +37,45 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     compileOnly files('libs/datahop.aar')
+}
+
+
+def getVersionName = {
+    return "0.0.1"  // Replace with version Name
+}
+
+def getArtifactId = {
+    return "wifidirectconnectivity" // Replace with library name ID
+}
+
+def githubProperties = new Properties()
+githubProperties.load(new FileInputStream(rootProject.file("github.properties")))
+
+afterEvaluate {
+    publishing {
+        publications {
+            bar(MavenPublication) {
+                groupId 'network.datahop.libraries' // Replace with group ID
+                artifactId getArtifactId()
+                version getVersionName()
+                artifact("$buildDir/outputs/aar/${getArtifactId()}-release.aar")
+            }
+        }
+
+        repositories {
+            maven {
+                name = "GitHubPackages"
+                /** Configure path of your package repository on Github
+                 *  Replace GITHUB_USERID with your/organisation Github userID and REPOSITORY with the repository name on GitHub
+                 */
+                url = uri("https://maven.pkg.github.com/datahop/p2p-discovery-ble")
+
+                credentials {
+                    /**Create github.properties in root project folder file with gpr.usr=GITHUB_USER_ID  & gpr.key=PERSONAL_ACCESS_TOKEN**/
+                    username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")
+                    password = githubProperties['gpr.key'] ?: System.getenv("GPR_API_KEY")
+                }
+            }
+        }
+    }
 }
