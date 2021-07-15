@@ -8,6 +8,8 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+//import android.net.wifi.WifiNetworkSuggestion;
+import android.net.wifi.WifiNetworkSuggestion;
 import android.os.Handler;
 import android.util.Log;
 
@@ -68,6 +70,7 @@ public class WifiLink  implements WifiConnection {
 
     private static WifiConnectionNotifier notifier;
 
+    final List<WifiNetworkSuggestion> suggestionsList;
 
     /* WifiLink constructor
      * @param Android context
@@ -80,7 +83,7 @@ public class WifiLink  implements WifiConnection {
         receiver = new WiFiConnectionReceiver();
         this.wifiManager = (WifiManager)this.context.getSystemService(Context.WIFI_SERVICE);
         handler = new Handler();
-
+        suggestionsList = new ArrayList<WifiNetworkSuggestion>();
     }
 
     /* Singleton method that returns a WifiLink instance
@@ -146,13 +149,13 @@ public class WifiLink  implements WifiConnection {
             if(wifis!=null) {
                 for (WifiConfiguration wifi : wifis) {
                     if (!wifi.SSID.equals(String.format("\"%s\"", SSID))) {
-                        if(wifi.SSID.startsWith("\"DIRECT")) {
+                        /*if(wifi.SSID.startsWith("\"DIRECT")) {
                             result = this.wifiManager.removeNetwork(wifi.networkId);
                             Log.d(TAG,"Removed "+wifi.SSID+" "+result);
-                        } else {
+                        } else {*/
                             result = this.wifiManager.disableNetwork(wifi.networkId);
                             Log.d(TAG,"Disable "+wifi.SSID+" "+result);
-                        }
+                        //}
                     }
                 }
             }
@@ -172,11 +175,23 @@ public class WifiLink  implements WifiConnection {
                 }
             }
 
+            final WifiNetworkSuggestion suggestion =
+                    new WifiNetworkSuggestion.Builder()
+                            .setSsid(SSID)
+                            .setWpa2Passphrase(password)
+                            .setIsAppInteractionRequired(false) // Optional (Needs location permission)
+                            .build();
+
+
+            suggestionsList.add(suggestion);
+
             this.context.registerReceiver(receiver, filter);
-            this.netId = this.wifiManager.addNetwork(this.wifiConfig);
-            Log.d(TAG,"Wifimanager add network "+netId);
+            this.wifiManager.addNetworkSuggestions(suggestionsList);
+            //this.netId = this.wifiManager.addNetwork(this.wifiConfig);
+            //this.wifiManager.addNetworkPrivileged(this.wifiConfig);
+            //Log.d(TAG,"Wifimanager add network "+netId);
             this.wifiManager.disconnect();
-            this.wifiManager.enableNetwork(this.netId, true);
+            //this.wifiManager.enableNetwork(this.netId, true);
             this.wifiManager.reconnect();
 
             holdWifiLock();
@@ -199,7 +214,7 @@ public class WifiLink  implements WifiConnection {
         }catch (IllegalArgumentException e){Log.d(TAG,"Unregister failed "+e);}
         if(connected){
             connected = false;
-            this.wifiManager.removeNetwork(this.netId);
+            /*this.wifiManager.removeNetwork(this.netId);
             List<WifiConfiguration> wifis = this.wifiManager.getConfiguredNetworks();
             if(wifis!=null) {
                 for (WifiConfiguration wifi : wifis) {
@@ -209,12 +224,13 @@ public class WifiLink  implements WifiConnection {
                     Log.d(TAG,"Wifi enable "+wifi.SSID + " "+result);
 
                 }
-            }
+            }*/
+            this.wifiManager.removeNetworkSuggestions(suggestionsList);
             mConectionState=ConectionStateNONE;
             mPreviousState=ConectionStateNONE;
             Log.d(TAG,"Report disconnection");
             if(notifier!=null)notifier.onDisconnect();
-
+            suggestionsList.clear();
         }
 
 

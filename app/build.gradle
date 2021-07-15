@@ -3,13 +3,13 @@ plugins {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "30.0.1"
 
     defaultConfig {
         applicationId "network.datahop.wifitransport"
-        minSdkVersion 28
-        targetSdkVersion 28
+        minSdkVersion 29
+        targetSdkVersion 29
         versionCode 1
         versionName "alpha"
 
@@ -29,6 +29,13 @@ android {
     buildFeatures {
         viewBinding true
     }
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
+    }
+
 }
 
 dependencies {
@@ -39,7 +46,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.0'
     implementation 'androidx.navigation:navigation-ui:2.3.0'
     implementation project(path: ':wifidirect')
-    //implementation 'network.datahop.libraries:wifidirectconnectivity:0.0.1'
+    //implementation 'network.datahop.libraries:wifidirect:0.0.1'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

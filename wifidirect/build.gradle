@@ -5,14 +5,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     buildToolsVersion "30.0.1"
 
     defaultConfig {
-        minSdkVersion 28
-        targetSdkVersion 28
-        versionCode 0
-        versionName "alpha"
+        minSdkVersion 29
+        targetSdkVersion 29
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -27,6 +25,13 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    lintOptions {
+        checkReleaseBuilds false
+        // Or, if you prefer, you can continue to check for errors in release builds,
+        // but continue the build even when errors are found:
+        abortOnError false
     }
 }
 
@@ -45,7 +50,7 @@ def getVersionName = {
 }
 
 def getArtifactId = {
-    return "wifidirectconnectivity" // Replace with library name ID
+    return "wifidirect" // Replace with library name ID
 }
 
 def githubProperties = new Properties()
@@ -68,7 +73,7 @@ afterEvaluate {
                 /** Configure path of your package repository on Github
                  *  Replace GITHUB_USERID with your/organisation Github userID and REPOSITORY with the repository name on GitHub
                  */
-                url = uri("https://maven.pkg.github.com/datahop/p2p-discovery-ble")
+                url = uri("https://maven.pkg.github.com/datahop/p2p-connection-wifidirect")
 
                 credentials {
                     /**Create github.properties in root project folder file with gpr.usr=GITHUB_USER_ID  & gpr.key=PERSONAL_ACCESS_TOKEN**/
