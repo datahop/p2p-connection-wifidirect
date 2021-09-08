@@ -32,7 +32,7 @@ allprojects {
          *  Replace UserID with package owner userID and REPOSITORY with the repository name
          *  e.g. "https://maven.pkg.github.com/enefce/AndroidLibraryForGitHubPackagesDemo"
          */
-            url = uri("https://maven.pkg.github.com/datahop/p2p-discovery-ble")
+            url = uri("https://maven.pkg.github.com/datahop/ipfs-lite")
 
             credentials {
                 username = githubProperties['gpr.usr'] ?: System.getenv("GPR_USER")

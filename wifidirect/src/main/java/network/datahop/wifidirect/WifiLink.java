@@ -183,6 +183,9 @@ public class WifiLink  implements WifiConnection {
             handler.removeCallbacksAndMessages(null);
             handler.postDelayed(timeout,wifiConnectionWaitingTime);
 
+
+            //notifier.connectionStarted(started.getTime());
+
         }
     }
 
@@ -322,6 +325,7 @@ public class WifiLink  implements WifiConnection {
             //Do something after 100ms
             if (!hadConnection) {
                 Log.d(TAG, "timeout");
+                notifier.onConnectionFailure(1,started.getTime(),(new Date()).getTime());
                 disconnect();
 
             }
@@ -389,11 +393,12 @@ public class WifiLink  implements WifiConnection {
                             String gwAddress = InetAddress.getByAddress(ByteBuffer.allocate(4).order(ByteOrder.LITTLE_ENDIAN).putInt(gateway).array()).getHostAddress();
                             Log.d(TAG, "IP  " + ipAddress + " " + gwAddress);
 
-                            if(notifier!=null)notifier.onConnectionSuccess();
+                            if(notifier!=null)notifier.onConnectionSuccess(started.getTime(),(new Date()).getTime(),wiffo.getRssi(),wiffo.getLinkSpeed(),wiffo.getFrequency());
                         }catch (UnknownHostException e){}
                     } else if(!wiffo.getSSID().equals(wifiConfig.SSID)) {
                         Log.d(TAG, "Not connected");
-                        if(notifier!=null)notifier.onConnectionFailure(0);
+                        if(notifier!=null)notifier.onConnectionFailure(0,started.getTime(),(new Date()).getTime());
+
                     }
 
                 }
