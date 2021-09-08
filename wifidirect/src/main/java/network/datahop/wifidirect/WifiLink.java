@@ -68,7 +68,7 @@ public class WifiLink  implements WifiConnection {
 
     private static WifiConnectionNotifier notifier;
 
-
+    private String peerId;
     /* WifiLink constructor
      * @param Android context
      */
@@ -121,7 +121,7 @@ public class WifiLink  implements WifiConnection {
      * @param password of the WiFi network to join
      * @param ip address to configure statically
      */
-    public void connect(String SSID, String password,String ip){
+    public void connect(String SSID, String password,String ip, String peerId){
 
         if (notifier == null) {
             Log.e(TAG, "notifier not found");
@@ -183,10 +183,14 @@ public class WifiLink  implements WifiConnection {
             handler.removeCallbacksAndMessages(null);
             handler.postDelayed(timeout,wifiConnectionWaitingTime);
 
-
+            this.peerId = peerId;
             //notifier.connectionStarted(started.getTime());
 
         }
+    }
+
+    public String Host() {
+        return peerId;
     }
 
     /**
@@ -197,6 +201,7 @@ public class WifiLink  implements WifiConnection {
         releaseWifiLock();
         handler.removeCallbacksAndMessages(null);
         Log.d(TAG,"Disconnect");
+        peerId = null;
         try {
             this.context.unregisterReceiver(receiver);
         }catch (IllegalArgumentException e){Log.d(TAG,"Unregister failed "+e);}
