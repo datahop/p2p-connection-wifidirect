@@ -111,7 +111,7 @@ public class WifiLink  implements WifiConnection {
      * @param password of the WiFi network to join
      */
     public void connect(String SSID, String password){
-        connect(SSID,password,"");
+        connect(SSID,password,"","");
     }
 
     /**
@@ -120,8 +120,9 @@ public class WifiLink  implements WifiConnection {
      * @param SSID of the WiFi network to join
      * @param password of the WiFi network to join
      * @param ip address to configure statically
+     * @param peerId peerId of the host
      */
-    public void connect(String SSID, String password,String ip, String peerId){
+    public void connect(String SSID, String password, String ip, String peerId){
 
         if (notifier == null) {
             Log.e(TAG, "notifier not found");
@@ -189,7 +190,7 @@ public class WifiLink  implements WifiConnection {
         }
     }
 
-    public String Host() {
+    public String host() {
         return peerId;
     }
 
