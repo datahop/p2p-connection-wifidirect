@@ -111,7 +111,7 @@ public class WifiLink  implements WifiConnection {
      * @param password of the WiFi network to join
      */
     public void connect(String SSID, String password){
-        connect(SSID,password,"");
+        connect(SSID,password,"","");
     }
 
     /**
@@ -189,7 +189,7 @@ public class WifiLink  implements WifiConnection {
         }
     }
 
-    public String Host() {
+    public String host() {
         return peerId;
     }
 
