@@ -103,17 +103,6 @@ public class WifiLink  implements WifiConnection {
         this.notifier = notifier;
     }
 
-
-    /**
-     * This method disconnects from any existing Wifi connection to join the SSID specified
-     * as an input parameter. DHCP is used for IP configuration.
-     * @param SSID of the WiFi network to join
-     * @param password of the WiFi network to join
-     */
-    public void connect(String SSID, String password){
-        connect(SSID,password,"","");
-    }
-
     /**
      * This method disconnects from any existing Wifi connection to join the SSID specified
      * as an input parameter. IP address is configure statically from the input parameter
