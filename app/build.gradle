@@ -43,6 +43,6 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation fileTree(dir: "libs", include: ["*.aar"])
+    implementation 'network.datahop.libs:datahop:v0.0.11'
 
 }
