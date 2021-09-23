@@ -90,3 +90,4 @@ lint/tmp/
 .idea
 .gradle
 local.properties
+github.properties
