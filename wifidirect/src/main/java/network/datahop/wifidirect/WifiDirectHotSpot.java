@@ -80,7 +80,7 @@ public class WifiDirectHotSpot implements ConnectionInfoListener, ChannelListene
      * @param notifier instance
      */
     public void setNotifier(WifiHotspotNotifier notifier) {
-        Log.d(TAG, "Trying to start");
+        //Log.d(TAG, "Trying to start");
         this.notifier = notifier;
     }
 
@@ -138,7 +138,7 @@ public class WifiDirectHotSpot implements ConnectionInfoListener, ChannelListene
                         if (notifier != null) notifier.onFailure(reason);
                     }
                 });
-                p2p.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
+                /*p2p.requestGroupInfo(channel, new WifiP2pManager.GroupInfoListener() {
                     @Override
                     public void onGroupInfoAvailable(WifiP2pGroup group) {
                         try {
@@ -148,7 +148,7 @@ public class WifiDirectHotSpot implements ConnectionInfoListener, ChannelListene
                                 mNetworkName = group.getNetworkName();
                                 mPassphrase = group.getPassphrase();
                                 Log.d(TAG, "onGroupInfoAvailable :" + mNetworkName + ":" + mPassphrase + ":");
-                                if (notifier != null) {
+                                if (started && notifier != null) {
                                     notifier.networkInfo(mNetworkName, mPassphrase);
                                 } else {
                                     Log.d(TAG, "onGroupInfoAvailable notifier null");
@@ -158,7 +158,7 @@ public class WifiDirectHotSpot implements ConnectionInfoListener, ChannelListene
                             Log.d(TAG, "onGroupInfoAvailable, error: " + e.toString());
                         }
                     }
-                });
+                });*/
             }
         } else {
             Log.d(TAG, "Trying to set network");
@@ -172,12 +172,17 @@ public class WifiDirectHotSpot implements ConnectionInfoListener, ChannelListene
     public void stop() {
         if (started) {
             //Log.d(TAG,"Stop");
+            mNetworkName=mPassphrase=mInetAddress="";
+            this.context.unregisterReceiver(receiver);
+            receiver=null;
+            started = false;
+
             try {
                 removeGroup();
             } catch (Exception e) {
                 Log.d(TAG, "Remove group error " + e);
             }
-            started = false;
+            Log.d(TAG,"Stop "+mNetworkName+" "+mPassphrase+" "+mInetAddress);
         }
 
     }
@@ -186,12 +191,12 @@ public class WifiDirectHotSpot implements ConnectionInfoListener, ChannelListene
         Log.d(TAG, "Removing P2P group");
         p2p.removeGroup(channel, new WifiP2pManager.ActionListener() {
             public void onSuccess() {
-                //Log.d(TAG,"Cleared Local Group ");
+                Log.d(TAG,"Cleared Local Group ");
                 if (notifier != null) notifier.stopOnSuccess();
             }
 
             public void onFailure(int reason) {
-                //Log.d(TAG,"Clearing Local Group failed, error code " + reason);
+                Log.d(TAG,"Clearing Local Group failed, error code " + reason);
                 if (notifier != null) notifier.stopOnFailure(reason);
             }
         });
@@ -213,10 +218,12 @@ public class WifiDirectHotSpot implements ConnectionInfoListener, ChannelListene
             if (mNetworkName.equals(group.getNetworkName()) && mPassphrase.equals(group.getPassphrase())) {
                 Log.d(TAG, "Already have local service for " + mNetworkName + " ," + mPassphrase);
             } else {
-                mNetworkName = group.getNetworkName();
-                mPassphrase = group.getPassphrase();
-                Log.d(TAG, "onGroupInfoAvailable " + mNetworkName + " " + mPassphrase);
-                if (notifier != null) notifier.networkInfo(mNetworkName, mPassphrase);
+                if(started) {
+                    mNetworkName = group.getNetworkName();
+                    mPassphrase = group.getPassphrase();
+                    Log.d(TAG, "onGroupInfoAvailable " + mNetworkName + " " + mPassphrase);
+                    if (notifier != null) notifier.networkInfo(mNetworkName, mPassphrase);
+                }
             }
         } catch (Exception e) {
             Log.d(TAG, "onGroupInfoAvailable, error: " + e.toString());

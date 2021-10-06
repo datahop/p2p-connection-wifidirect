@@ -99,7 +99,7 @@ public class WifiLink  implements WifiConnection {
      * @param notifier instance
      */
     public void setNotifier(WifiConnectionNotifier notifier){
-        Log.d(TAG,"Trying to start");
+        //Log.d(TAG,"Trying to start");
         this.notifier = notifier;
     }
 

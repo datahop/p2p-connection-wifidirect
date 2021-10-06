@@ -34,6 +34,9 @@ public class MainActivity extends AppCompatActivity implements WifiHotspotNotifi
     private WifiDirectHotSpot hotspot;
     private WifiLink connection;
 
+    private int counter;
+    private boolean stopping;
+
     private static final int PERMISSION_REQUEST_FINE_LOCATION = 1;
     private static final int PERMISSION_WIFI_STATE = 2;
 
@@ -43,6 +46,9 @@ public class MainActivity extends AppCompatActivity implements WifiHotspotNotifi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        counter=0;
+        stopping=false;
+        
         hotspot = WifiDirectHotSpot.getInstance(getApplicationContext());
         connection = WifiLink.getInstance(getApplicationContext());
         hotspot.setNotifier(this);
@@ -85,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements WifiHotspotNotifi
             @Override
             public void onClick(View v) {
                 Log.d(TAG,"Connecting "+ ssid.getText().toString()+" "+password.getText().toString());
-                connection.connect(ssid.getText().toString(),password.getText().toString());
+                connection.connect(ssid.getText().toString(),password.getText().toString(),"","");
             }
         });
 
@@ -115,12 +121,22 @@ public class MainActivity extends AppCompatActivity implements WifiHotspotNotifi
     @Override
     public void clientsConnected(long l) {
         Log.d(TAG,"Clients connected "+l);
+        if(counter>0&&l==0&&!stopping){
+            Log.d(TAG,"Discovery restart");
+            stopping=true;
+            //discoveryDriver.start(TAG,id,2000,30000);
+            hotspot.stop();
+        }
+        counter= (int) l;
+        stopping=false;
     }
 
     @Override
     public void networkInfo(String net, String pass) {
         ssidView.setText("SSID: "+net);
         passView.setText("Pass: "+pass);
+
+        Log.d(TAG,"Network info "+net+" "+pass);
     }
 
     @Override
