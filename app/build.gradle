@@ -3,13 +3,12 @@ plugins {
 }
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "30.0.2"
+    compileSdkVersion 32
 
     defaultConfig {
         applicationId "network.datahop.wifitransport"
-        minSdkVersion 24
-        targetSdkVersion 28
+        minSdkVersion 26
+        targetSdkVersion 32
         versionCode 1
         versionName "alpha"
 
@@ -43,6 +42,6 @@ dependencies {
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'network.datahop.libs:datahop:v0.0.11'
-
+//    implementation 'network.datahop.libs:datahop:v0.0.11'
+    implementation(name: 'datahop', ext: 'aar')
 }
